@@ -11,7 +11,6 @@ import { Todo } from './types/Todo';
 import { getTodos } from './api';
 import { Filters, prepareTodos } from './utils/todos';
 import { useFetch } from './hooks/useFetch';
-import { Errors } from './types/types';
 
 export const App: React.FC = () => {
   const [filter, setFilter] = useState<Filters>(Filters.All);
