@@ -1,5 +1,5 @@
 import { Todo } from '../../types/Todo';
-import cn from 'classNames';
+import cn from 'classnames';
 
 type TodoItemProps = {
   todo: Todo;
