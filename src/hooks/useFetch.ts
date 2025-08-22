@@ -1,26 +1,31 @@
 import { useEffect, useState } from 'react';
+import { Errors } from '../types/types';
 
 export function useFetch<T>(
   callback: () => Promise<T>,
-): [T | null, boolean, boolean] {
+): [T | null, boolean, string] {
   const [data, setData] = useState<T | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
   useEffect(() => {
-    setIsError(false);
+    setErrorMessage('');
     setIsLoading(true);
     callback()
       .then((res: T) => {
         setData(res);
       })
       .catch((error: unknown) => {
-        setIsError(true);
+        if (error instanceof Error) {
+          setErrorMessage(error.message);
+        } else {
+          setErrorMessage(Errors.todo);
+        }
       })
       .finally(() => {
         setIsLoading(false);
       });
   }, [callback]);
 
-  return [data, isLoading, isError];
+  return [data, isLoading, errorMessage];
 }

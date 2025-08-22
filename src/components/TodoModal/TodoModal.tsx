@@ -12,16 +12,21 @@ type Props = {
 export const TodoModal: React.FC<Props> = ({ selectedTodo, closeModal }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
   useEffect(() => {
+    setErrorMessage('');
     setIsLoading(true);
     getUser(selectedTodo.userId)
       .then((res: User) => {
         setUser(res);
       })
       .catch((error: unknown) => {
-        setIsError(true);
+        if (error instanceof Error) {
+          setErrorMessage(error.message);
+        } else {
+          setErrorMessage(Errors.user);
+        }
       })
       .finally(() => setIsLoading(false));
   }, [selectedTodo.userId]);
@@ -29,7 +34,7 @@ export const TodoModal: React.FC<Props> = ({ selectedTodo, closeModal }) => {
   return (
     <div className="modal is-active" data-cy="modal">
       <div className="modal-background" />
-      {isError && <p className="has-danger">{Errors.user}</p>}
+      {errorMessage && <p className="has-danger">{errorMessage}</p>}
       {isLoading && <Loader />}
       {selectedTodo && user && (
         <div className="modal-card">

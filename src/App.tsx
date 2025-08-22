@@ -17,7 +17,7 @@ export const App: React.FC = () => {
   const [filter, setFilter] = useState<Filters>(Filters.All);
   const [searchText, setSearchText] = useState<string>('');
   const [selectedTodo, setSelectedTodo] = useState<Todo | null>(null);
-  const [todos, isLoading, isError] = useFetch<Todo[]>(getTodos);
+  const [todos, isLoading, errorMessage] = useFetch<Todo[]>(getTodos);
 
   const filteredTodos = useMemo(() => {
     return todos ? prepareTodos(todos, filter, searchText) : todos;
@@ -56,7 +56,7 @@ export const App: React.FC = () => {
             </div>
 
             <div className="block">
-              {isError && <p className="has-danger">{Errors.todo}</p>}
+              {errorMessage && <p className="has-danger">{errorMessage}</p>}
               {isLoading && <Loader />}
               {!isLoading && filteredTodos && (
                 <TodoList
